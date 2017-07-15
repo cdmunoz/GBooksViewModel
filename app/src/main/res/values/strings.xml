@@ -1,0 +1,4 @@
+<resources>
+  <string name="app_name">GBooksViewModel</string>
+  <string name="error_no_internet">No internet connection available</string>
+</resources>
