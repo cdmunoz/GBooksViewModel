@@ -24,7 +24,6 @@ public class MainActivity extends LifecycleActivity {
   @BindView(R.id.searchText) EditText searchText;
   @BindView(R.id.searchButton) ImageButton searchButton;
   @BindView(R.id.bookList) RecyclerView bookList;
-  static final String SEARCH_RESULTS = "bookSearchResults";
 
   private BooksListAdapter adapter;
   private BooksViewModel model;
@@ -38,22 +37,16 @@ public class MainActivity extends LifecycleActivity {
     bookList.setLayoutManager(
         new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     bookList.setAdapter(adapter);
-    searchButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (isConnectionAvailable()) {
-          performSearch();
-        } else {
-          Toast.makeText(MainActivity.this, R.string.error_no_internet, Toast.LENGTH_SHORT).show();
-        }
+    searchButton.setOnClickListener(v -> {
+      if (isConnectionAvailable()) {
+        performSearch();
+      } else {
+        Toast.makeText(MainActivity.this, R.string.error_no_internet, Toast.LENGTH_SHORT).show();
       }
     });
 
     model = ViewModelProviders.of(this).get(BooksViewModel.class);
-    model.getBooks().observe(this, new Observer<List<Book>>() {
-      @Override public void onChanged(@Nullable List<Book> books) {
-        updateUi(books);
-      }
-    });
+    model.getBooks().observe(this, books -> updateUi(books));
   }
 
   private void updateUi(List<Book> books) {
